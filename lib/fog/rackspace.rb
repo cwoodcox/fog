@@ -43,6 +43,7 @@ module Fog
     end
 
     service(:cdn,             'rackspace/cdn',            'CDN')
+    service(:cloud_db,        'rackspace/cloud_db',       'CloudDB')
     service(:compute,         'rackspace/compute',        'Compute')
     service(:dns,             'rackspace/dns',            'DNS')
     service(:storage,         'rackspace/storage',        'Storage')
