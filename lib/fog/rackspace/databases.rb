@@ -14,12 +14,15 @@ module Fog
       model_path 'fog/rackspace/models/databases'
       model :instance
       collection :instances
+      model :database
+      collection :databases
       model :flavor
       collection :flavors
 
       request_path 'fog/rackspace/requests/databases'
       request :list_instances_details
       request :get_instance
+      request :list_databases
       request :list_flavors_details
       request :get_flavor
 

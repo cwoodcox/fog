@@ -14,6 +14,15 @@ module Fog
         attribute :links
         attribute :volume
         attribute :flavor
+
+        def databases
+          @databases ||= begin
+            Fog::Rackspace::Databases::Databases.new({
+              :connection => connection,
+              :instance => self
+            })
+          end
+        end
       end
     end
   end
