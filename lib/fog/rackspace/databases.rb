@@ -26,6 +26,7 @@ module Fog
       request :get_flavor
       request :list_instances_details
       request :get_instance
+      request :check_root_user
       request :list_databases
       request :list_users
 

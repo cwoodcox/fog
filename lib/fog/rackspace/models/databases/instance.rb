@@ -32,6 +32,11 @@ module Fog
             })
           end
         end
+
+        def root_user_enabled?
+          requires :identity
+          connection.check_root_user(identity).body['rootEnabled']
+        end
       end
     end
   end
