@@ -23,6 +23,15 @@ module Fog
             })
           end
         end
+
+        def users
+          @users ||= begin
+            Fog::Rackspace::Databases::Users.new({
+              :connection => connection,
+              :instance => self
+            })
+          end
+        end
       end
     end
   end
