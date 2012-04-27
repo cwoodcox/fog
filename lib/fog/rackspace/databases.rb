@@ -12,19 +12,22 @@ module Fog
       recognizes :rackspace_auth_token
 
       model_path 'fog/rackspace/models/databases'
+      model :flavor
+      collection :flavors
       model :instance
       collection :instances
       model :database
       collection :databases
-      model :flavor
-      collection :flavors
+      model :user
+      collection :users
 
       request_path 'fog/rackspace/requests/databases'
+      request :list_flavors_details
+      request :get_flavor
       request :list_instances_details
       request :get_instance
       request :list_databases
-      request :list_flavors_details
-      request :get_flavor
+      request :list_users
 
       class Mock
         def request(params)
