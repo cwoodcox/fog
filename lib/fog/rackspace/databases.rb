@@ -28,6 +28,7 @@ module Fog
       request :get_instance
       request :create_instance
       request :create_database
+      request :create_user
       request :check_root_user
       request :list_databases
       request :list_users
