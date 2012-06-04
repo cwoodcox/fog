@@ -27,6 +27,7 @@ module Fog
       request :list_instances_details
       request :get_instance
       request :create_instance
+      request :create_database
       request :check_root_user
       request :list_databases
       request :list_users
@@ -70,13 +71,13 @@ module Fog
               :path     => "#{@path}/#{params[:path]}"
             }))
           rescue Excon::Errors::NotFound => error
-            raise NotFound.slurp error
+            raise Fog::Rackspace::Errors::NotFound.slurp error
           rescue Excon::Errors::BadRequest => error
             raise Fog::Rackspace::Errors::BadRequest.slurp error
           rescue Excon::Errors::InternalServerError => error
-            raise InternalServerError.slurp error
+            raise Fog::Rackspace::Errors::InternalServerError.slurp error
           rescue Excon::Errors::HTTPStatusError => error
-            raise ServiceError.slurp error
+            raise Fog::Rackspace::Errors::ServiceError.slurp error
           end
           unless response.body.empty?
             response.body = Fog::JSON.decode(response.body)
