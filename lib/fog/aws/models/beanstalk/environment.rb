@@ -45,6 +45,12 @@ module Fog
           data
         end
 
+        # Returns the load balancer object associated with the environment.
+        def load_balancer(elb_connection = Fog::AWS[:elb])
+          requires :resources
+          elb_connection.load_balancers.get(resources['LoadBalancer']['LoadBalancerName'])
+        end
+
         # Return events related to this version
         def events
           requires :id
@@ -62,6 +68,16 @@ module Fog
         def rebuild
           requires :id
           connection.rebuild_environment({'EnvironmentId' => id})
+          reload
+        end
+
+        def swap_cnames(source)
+          requires :name
+          connection.swap_environment_cnames({
+              'SourceEnvironmentName' => source.name,
+              'DestinationEnvironmentName' => name
+                                             })
+          source.reload
           reload
         end
 

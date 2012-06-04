@@ -6,9 +6,10 @@ Gem::Specification.new do |s|
   ## If your rubyforge_project name is different, then edit it and comment out
   ## the sub! line in the Rakefile
   s.name              = 'fog'
-  s.version           = '1.3.0'
-  s.date              = '2012-03-21'
+  s.version           = '1.3.1'
+  s.date              = '2012-03-27'
   s.rubyforge_project = 'fog'
+
 
   ## Make sure your summary is short. The description may be as long
   ## as you like.
@@ -25,6 +26,10 @@ Gem::Specification.new do |s|
   ## This sections is only necessary if you have C extensions.
   # s.require_paths << 'ext'
   # s.extensions = %w[ext/extconf.rb]
+
+  ## This gets added to the $LOAD_PATH so that 'lib/NAME.rb' can be required as
+  ## require 'NAME.rb' or'/lib/NAME/file.rb' can be as require 'NAME/file.rb'
+  s.require_paths = %w[lib]
 
   ## If your gem includes any executables, list them here.
   s.executables = ["fog"]
@@ -54,10 +59,11 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rdoc')
   s.add_development_dependency('thor')
   s.add_development_dependency('rspec', '~>1.3.1')
-  s.add_development_dependency('rbovirt', '>=0.0.9')
+  s.add_development_dependency('rbovirt', '>=0.0.11')
   s.add_development_dependency('shindo', '~>0.3.4')
   s.add_development_dependency('virtualbox', '~>0.9.1')
   s.add_development_dependency('fission')
+  s.add_development_dependency('pry')
 #  s.add_development_dependency('ruby-libvirt','~>0.4.0')
 
   s.files = `git ls-files`.split("\n")

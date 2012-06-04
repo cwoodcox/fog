@@ -1,4 +1,4 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'aws'))
+require 'fog/aws'
 
 module Fog
   module AWS
@@ -7,6 +7,7 @@ module Fog
       class InvalidParameterError < Fog::Errors::Error; end
 
       requires :aws_access_key_id, :aws_secret_access_key
+      recognizes :region, :host, :path, :port, :scheme, :persistent
 
       request_path 'fog/aws/requests/beanstalk'
 
@@ -65,7 +66,6 @@ module Fog
 
         def initialize(options={})
           require 'fog/core/parser'
-          require 'multi_json'
 
           @aws_access_key_id      = options[:aws_access_key_id]
           @aws_secret_access_key  = options[:aws_secret_access_key]
@@ -109,15 +109,15 @@ module Fog
           )
 
           begin
-            response = @connection.request({
-                                               :body       => body,
-                                               :expects    => 200,
-                                               :headers    => { 'Content-Type' => 'application/x-www-form-urlencoded' },
-                                               :idempotent => idempotent,
-                                               :host       => @host,
-                                               :method     => 'POST',
-                                               :parser     => parser
-                                           })
+            @connection.request({
+                :body       => body,
+                :expects    => 200,
+                :headers    => { 'Content-Type' => 'application/x-www-form-urlencoded' },
+                :idempotent => idempotent,
+                :host       => @host,
+                :method     => 'POST',
+                :parser     => parser
+            })
           rescue Excon::Errors::HTTPStatusError => error
             if match = error.response.body.match(/<Code>(.*)<\/Code>[ \t\n]*<Message>(.*)<\/Message>/)
               raise case match[1].split('.').last

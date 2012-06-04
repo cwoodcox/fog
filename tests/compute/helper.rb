@@ -15,12 +15,44 @@ def compute_providers
     },
     :brightbox  => {
       :server_attributes => {
-        :image_id => 'img-4gqhs' # Ubuntu Lucid 10.04 server (i686)
+        :image_id => 'img-wwgbb' # Ubuntu Lucid 10.04 server (i686)
       },
       :mocked => false
     },
+    :openstack => {
+      :mocked => true,
+      :server_attributes => {
+        :flavor_ref => 2,
+        :image_ref  => Fog::Compute[:openstack].images.first.id,
+        :name       => "fog_#{Time.now.to_i}"
+      }
+    },
+    :cloudstack => {
+      :provider_attributes => {
+        :cloudstack_host => 'http://host.foo'
+      },
+      :server_attributes => {}.tap do |hash|
+        [:zone_id, :network_ids, :image_id, :flavor_id].each do |k|
+          hash[k]= Fog.credentials[:cloudstack] && Fog.credentials[:cloudstack][k]
+        end
+      end,
+      :volume_attributes => {:name => "somevolume"}.tap do |hash|
+        [:zone_id, :disk_offering_id].each do |k|
+          hash[k]= Fog.credentials[:cloudstack] && Fog.credentials[:cloudstack][k]
+        end
+      end,
+      :mocked => true
+    },
     :glesys   => {
       :mocked => false
+    },
+    :hp       => {
+      :server_attributes => {
+        :flavor_id => 100,
+        :image_id  => 1242,
+        :name      => "fog_#{Time.now.to_i}"
+      },
+      :mocked => true
     },
     :ibm => {
       :server_attributes => {},
@@ -38,13 +70,6 @@ def compute_providers
         :name     => "fog_#{Time.now.to_i}"
       },
       :mocked => true
-    },
-    :slicehost  => {
-      :server_attributes => {
-        :image_id => 49, # image 49 = Ubuntu 10.04 LTS (lucid)
-        :name     => "fog_#{Time.now.to_i}"
-      },
-      :mocked => false
     },
     :voxel      => {
       :server_attributes => {

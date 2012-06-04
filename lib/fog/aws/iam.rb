@@ -1,4 +1,4 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'aws'))
+require 'fog/aws'
 
 module Fog
   module AWS
@@ -123,7 +123,6 @@ module Fog
         # * IAM object with connection to AWS.
         def initialize(options={})
           require 'fog/core/parser'
-          require 'multi_json'
 
           @aws_access_key_id      = options[:aws_access_key_id]
           @aws_secret_access_key  = options[:aws_secret_access_key]

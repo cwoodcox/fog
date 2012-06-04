@@ -14,6 +14,7 @@ module Fog
         attribute :ami_launch_index,      :aliases => 'amiLaunchIndex'
         attribute :availability_zone,     :aliases => 'availabilityZone'
         attribute :block_device_mapping,  :aliases => 'blockDeviceMapping'
+        attribute :network_interfaces,    :aliases => 'networkInterfaces'
         attribute :client_token,          :aliases => 'clientToken'
         attribute :dns_name,              :aliases => 'dnsName'
         attribute :groups
@@ -62,6 +63,8 @@ module Fog
               'ami-3202f25b'
             when 'us-west-1'
               'ami-f5bfefb0'
+            when 'us-west-2'
+              'ami-e0ec60d0'
             end
           end
           super
@@ -190,13 +193,12 @@ module Fog
 
         def setup(credentials = {})
           requires :public_ip_address, :username
-          require 'multi_json'
           require 'net/ssh'
 
           commands = [
             %{mkdir .ssh},
             %{passwd -l #{username}},
-            %{echo "#{MultiJson.encode(Fog::JSON.sanitize(attributes))}" >> ~/attributes.json}
+            %{echo "#{Fog::JSON.encode(Fog::JSON.sanitize(attributes))}" >> ~/attributes.json}
           ]
           if public_key
             commands << %{echo "#{public_key}" >> ~/.ssh/authorized_keys}
@@ -208,7 +210,7 @@ module Fog
               Timeout::timeout(8) do
                 Fog::SSH.new(public_ip_address, username, credentials.merge(:timeout => 4)).run('pwd')
               end
-            rescue Errno::ECONNREFUSED
+            rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
               sleep(2)
               retry
             rescue Net::SSH::AuthenticationFailed, Timeout::Error

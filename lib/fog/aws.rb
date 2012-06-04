@@ -1,4 +1,4 @@
-require(File.expand_path(File.join(File.dirname(__FILE__), 'core')))
+require 'fog/core'
 
 module Fog
   module AWS
@@ -57,6 +57,14 @@ module Fog
         return options
       else
         return {key => value}
+      end
+    end
+
+    def self.indexed_request_param(name, values)
+      idx = -1
+      Array(values).inject({}) do |params, value|
+        params["#{name}.#{idx += 1}"] = value
+        params
       end
     end
 
@@ -226,6 +234,10 @@ module Fog
         "sg-#{Fog::Mock.random_hex(8)}"
       end
 
+      def self.network_interface_id
+        "eni-#{Fog::Mock.random_hex(8)}"
+      end
+
       def self.key_id(length=21)
         #Probably close enough
         Fog::Mock.random_selection('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',length)
@@ -237,6 +249,7 @@ module Fog
     end
 
     def self.parse_security_group_options(group_name, options)
+      options ||= Hash.new
       if group_name.is_a?(Hash)
         options = group_name
       elsif group_name
@@ -246,11 +259,13 @@ module Fog
         options = options.clone
         options['GroupName'] = group_name
       end
-      if !options.key?('GroupName') && !options.key?('GroupId')
+      name_specified = options.key?('GroupName') && !options['GroupName'].nil?
+      group_id_specified = options.key?('GroupId') && !options['GroupId'].nil?
+      unless name_specified || group_id_specified
         raise Fog::Compute::AWS::Error, 'Neither GroupName nor GroupId specified'
       end
-      if options.key?('GroupName') && options.key?('GroupId')
-        raise Fog::Compute::AWS::Error, 'Both GroupName and GroupId specified'
+      if name_specified && group_id_specified
+        options.delete('GroupName')
       end
       options
     end

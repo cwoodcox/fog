@@ -9,6 +9,7 @@ module Fog
           unless valid_opts.all? { |opt| options.has_key?(opt) }
             raise ArgumentError.new("Required data missing: #{(valid_opts - options.keys).map(&:inspect).join(", ")}")
           end
+          valid_opts.push(:computePool)
 
           # Figure out the template_uri
           catalog_item = get_catalog_item( catalog_item_uri ).body
@@ -50,6 +51,7 @@ module Fog
                 end
                 xml.Property( :xmlns => "http://schemas.dmtf.org/ovf/envelope/1", :"ovf:key" => "row", :"ovf:value" => options[:row] )
                 xml.Property( :xmlns => "http://schemas.dmtf.org/ovf/envelope/1", :"ovf:key" => "group", :"ovf:value" => options[:group] )
+                xml.Property( :xmlns => "http://schemas.dmtf.org/ovf/envelope/1", :"ovf:key" => "computePool", :"ovf:value" => options[:computePool] )
               }
               xml.VirtualHardwareSection( :"xmlns:q1" => "http://www.vmware.com/vcloud/v0.8" ) {
                 # # of CPUS

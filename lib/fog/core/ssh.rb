@@ -1,3 +1,5 @@
+require 'delegate'
+
 module Fog
   module SSH
 
@@ -13,8 +15,12 @@ module Fog
 
       def self.data
         @data ||= Hash.new do |hash, key|
-          hash[key] = {}
+          hash[key] = []
         end
+      end
+
+      def self.reset
+        @data= nil
       end
 
       def initialize(address, username, options)
@@ -23,8 +29,8 @@ module Fog
         @options  = options
       end
 
-      def run(commands)
-        Fog::Mock.not_implemented
+      def run(commands, &blk)
+        self.class.data[@address] << {:commands => commands, :username => @username, :options => @options}
       end
 
     end
@@ -45,7 +51,7 @@ module Fog
         @options  = { :paranoid => false }.merge(options)
       end
 
-      def run(commands)
+      def run(commands, &blk)
         commands = [*commands]
         results  = []
         begin
@@ -61,11 +67,13 @@ module Fog
 
                   channel.on_data do |ch, data|
                     result.stdout << data
+                    yield [data, ''] if blk
                   end
 
                   channel.on_extended_data do |ch, type, data|
                     next unless type == 1
                     result.stderr << data
+                    yield ['', data] if blk
                   end
 
                   channel.on_request('exit-status') do |ch, data|
@@ -96,7 +104,12 @@ module Fog
       attr_accessor :command, :stderr, :stdout, :status
 
       def display_stdout
-        Formatador.display_line(stdout.split("\r\n"))
+        data = stdout.split("\r\n")
+        if data.is_a?(String)
+          Formatador.display_line(data)
+        elsif data.is_a?(Array)
+          Formatador.display_lines(data)
+        end
       end
 
       def display_stderr

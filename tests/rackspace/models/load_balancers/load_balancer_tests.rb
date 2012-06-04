@@ -7,7 +7,7 @@ Shindo.tests('Fog::Rackspace::LoadBalancers | load_balancer', ['rackspace']) do
       :protocol => 'HTTP',
       :port => 80,
       :virtual_ips => [{ :type => 'PUBLIC'}],
-      :nodes => [{ :address => '10.0.0.1', :port => 80, :condition => 'ENABLED'}]
+      :nodes => [{ :address => '1.1.1.1', :port => 80, :condition => 'ENABLED'}]
     }
 
   given_a_load_balancer_service do
@@ -126,6 +126,18 @@ Shindo.tests('Fog::Rackspace::LoadBalancers | load_balancer', ['rackspace']) do
 
       @instance.wait_for { ready? }
     end
+
+    tests('create(...with algorithm...)') do
+      attributes = LOAD_BALANCER_ATTRIBUTES.clone
+      attributes[:algorithm] = 'LEAST_CONNECTIONS'
+      @lb = @service.load_balancers.create attributes
+      returns('LEAST_CONNECTIONS') { @lb.algorithm }
+
+      @lb.wait_for { ready? }
+
+      @lb.destroy
+    end
+
 
     tests('failure') do
       @lb = @service.load_balancers.new LOAD_BALANCER_ATTRIBUTES

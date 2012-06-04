@@ -27,6 +27,7 @@ module Fog
       request :vm_reconfig_hardware
       request :vm_reconfig_memory
       request :vm_reconfig_cpus
+      request :vm_config_vnc
 
       module Shared
 
@@ -49,6 +50,8 @@ module Fog
           :tools_state => 'guest.toolsStatus',
           :tools_version => 'guest.toolsVersionStatus',
           :is_a_template => 'config.template',
+          :memory_mb => 'config.hardware.memoryMB',
+          :cpus   => 'config.hardware.numCPU',
         }
 
         # Utility method to convert a VMware managed object into an attribute hash.
@@ -58,15 +61,15 @@ module Fog
         def convert_vm_mob_ref_to_attr_hash(vm_mob_ref)
           return nil unless vm_mob_ref
 
-          props = vm_mob_ref.collect! *ATTR_TO_PROP.values.uniq
+          props = vm_mob_ref.collect!(*ATTR_TO_PROP.values.uniq)
           # NOTE: Object.tap is in 1.8.7 and later.
           # Here we create the hash object that this method returns, but first we need
           # to add a few more attributes that require additional calls to the vSphere
           # API. The hypervisor name and mac_addresses attributes may not be available
           # so we need catch any exceptions thrown during lookup and set them to nil.
           #
-          # The use of the "tap" method here is a convience, it allows us to update the
-          # hash object without expliclty returning the hash at the end of the method.
+          # The use of the "tap" method here is a convenience, it allows us to update the
+          # hash object without explicitly returning the hash at the end of the method.
           Hash[ATTR_TO_PROP.map { |k,v| [k.to_s, props[v]] }].tap do |attrs|
             attrs['id'] ||= vm_mob_ref._ref
             attrs['mo_ref'] = vm_mob_ref._ref

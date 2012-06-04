@@ -32,6 +32,9 @@ module Fog
       when :gogrid
         require 'fog/go_grid/compute'
         Fog::Compute::GoGrid.new(attributes)
+      when :hp
+        require 'fog/hp/compute'
+        Fog::Compute::HP.new(attributes)
       when :ibm
         require 'fog/ibm/compute'
         Fog::Compute::IBM.new(attributes)
@@ -63,10 +66,6 @@ module Fog
       when :rackspace
         require 'fog/rackspace/compute'
         Fog::Compute::Rackspace.new(attributes)
-      when :slicehost
-        warn "[DEPRECATION] `slicehost` is deprecated. Please use `rackspace` instead."
-        require 'fog/slicehost/compute'
-        Fog::Compute::Slicehost.new(attributes)
       when :stormondemand
         require 'fog/storm_on_demand/compute'
         Fog::Compute::StormOnDemand.new(attributes)
@@ -85,6 +84,9 @@ module Fog
       when :vsphere
         require 'fog/vsphere/compute'
         Fog::Compute::Vsphere.new(attributes)
+      when :xenserver
+        require 'fog/xenserver/compute'
+        Fog::Compute::XenServer.new(attributes)
       else
         raise ArgumentError.new("#{provider} is not a recognized compute provider")
       end

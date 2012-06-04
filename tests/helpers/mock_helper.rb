@@ -15,6 +15,7 @@ if Fog.mock?
     :bluebox_customer_id              => 'bluebox_customer_id',
     :brightbox_client_id              => 'brightbox_client_id',
     :brightbox_secret                 => 'brightbox_secret',
+    :cloudstack_host                  => 'http://cloudstack.example.org',
     :clodo_api_key                    => 'clodo_api_key',
     :clodo_username                   => 'clodo_username',
     :dnsimple_email                   => 'dnsimple_email',
@@ -30,6 +31,9 @@ if Fog.mock?
     :go_grid_shared_secret            => 'go_grid_shared_secret',
     :google_storage_access_key_id     => 'google_storage_access_key_id',
     :google_storage_secret_access_key => 'google_storage_secret_access_key',
+    :hp_account_id                    => 'hp_account_id',
+    :hp_secret_key                    => 'hp_secret_key',
+    :hp_tenant_id                     => 'hp_tenant_id',
     :ibm_username                     => 'ibm_username',
     :ibm_password                     => 'ibm_password',
     :joyent_username                  => "joyentuser",
@@ -47,13 +51,13 @@ if Fog.mock?
     :openstack_api_key                => 'openstack_api_key',
     :openstack_username               => 'openstack_username',
     :openstack_tenant                 => 'openstack_tenant',
-    :openstack_auth_url               => 'openstack_auth_url',
+    :openstack_auth_url               => 'http://openstack:35357/v2.0/tokens',
     :ovirt_url                        => 'http://ovirt:8080/api',
     :ovirt_username                   => 'admin@internal',
     :ovirt_password                   => '123123',
+    :libvirt_uri                      => 'qemu://libvirt/system',
     :rackspace_api_key                => 'rackspace_api_key',
     :rackspace_username               => 'rackspace_username',
-    :slicehost_password               => 'slicehost_password',
     :storm_on_demand_username         => 'storm_on_demand_username',
     :storm_on_demand_password         => 'storm_on_demand_password',
     :vcloud_host                      => 'vcloud_host',
@@ -69,6 +73,9 @@ if Fog.mock?
     :vsphere_server                   => 'virtualcenter.lan',
     :vsphere_username                 => 'apiuser',
     :vsphere_password                 => 'apipassword',
-    :vsphere_expected_pubkey_hash     => 'abcdef1234567890'
-  }
+    :vsphere_expected_pubkey_hash     => 'abcdef1234567890',
+    :libvirt_uri                      => 'qemu:///system',
+    :libvirt_username                 => 'root',
+    :libvirt_password                 => 'password'
+  }.merge(Fog.credentials)
 end

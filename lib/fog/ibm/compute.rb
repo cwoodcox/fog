@@ -1,4 +1,4 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'ibm'))
+require 'fog/ibm'
 require 'fog/compute'
 
 module Fog
@@ -20,6 +20,8 @@ module Fog
       collection :keys
       model :location
       collection :locations
+      model :vlan
+      collection :vlans
 
       request_path 'fog/ibm/requests/compute'
 

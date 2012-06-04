@@ -1,4 +1,4 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'aws'))
+require 'fog/aws'
 
 module Fog
   module AWS
@@ -9,6 +9,7 @@ module Fog
 
       request_path 'fog/aws/requests/dynamodb'
       request :batch_get_item
+      request :batch_write_item
       request :create_table
       request :delete_item
       request :delete_table
@@ -69,8 +70,6 @@ module Fog
         # ==== Returns
         # * DynamoDB object with connection to aws
         def initialize(options={})
-          require 'multi_json'
-
           if options[:aws_session_token]
             @aws_access_key_id      = options[:aws_access_key_id]
             @aws_secret_access_key  = options[:aws_secret_access_key]
@@ -107,12 +106,12 @@ module Fog
         def request(params)
           idempotent = params.delete(:idempotent)
 
-          now = Fog::Time.now
           headers = {
             'Content-Type'          => 'application/x-amz-json-1.0',
             'x-amz-date'            => Fog::Time.now.to_date_header,
             'x-amz-security-token'  => @aws_session_token
           }.merge(params[:headers])
+
           headers['x-amzn-authorization']  = signed_authorization_header(params, headers)
 
           response = @connection.request({
@@ -125,7 +124,7 @@ module Fog
           })
 
           unless response.body.empty?
-            response.body = MultiJson.decode(response.body)
+            response.body = Fog::JSON.decode(response.body)
           end
 
           response

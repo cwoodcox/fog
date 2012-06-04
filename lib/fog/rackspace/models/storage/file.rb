@@ -31,7 +31,8 @@ module Fog
 
         def copy(target_directory_key, target_file_key, options={})
           requires :directory, :key
-          connection.copy_object(directory.key, key, target_directory_key, target_file_key)
+          options['Content-Type'] ||= content_type if content_type
+          connection.copy_object(directory.key, key, target_directory_key, target_file_key, options)
           target_directory = connection.directories.new(:key => target_directory_key)
           target_directory.files.get(target_file_key)
         end
@@ -64,8 +65,9 @@ module Fog
           requires :body, :directory, :key
           options['Content-Type'] = content_type if content_type
           data = connection.put_object(directory.key, key, body, options)
-          merge_attributes(data.headers)
+          merge_attributes(data.headers.reject {|key, value| ['Content-Length', 'Content-Type'].include?(key)})
           self.content_length = Fog::Storage.get_body_size(body)
+          self.content_type ||= Fog::Storage.get_content_type(body)
           true
         end
 

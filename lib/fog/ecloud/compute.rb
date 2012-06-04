@@ -1,8 +1,8 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'ecloud'))
+require 'fog/ecloud'
 require 'ipaddr'
 
 class IPAddr
-  def mask
+  def mask_string
     _to_string(@mask_addr)
   end
 end
@@ -367,7 +367,7 @@ module Fog
         end
 
         def netmask
-          self[:netmask] || subnet_ipaddr.mask
+          self[:netmask] || subnet_ipaddr.mask_string
         end
 
         def dns
@@ -850,6 +850,8 @@ module Fog
       collection :tasks
       model :vdc
       collection :vdcs
+      model :compute_pool
+      collection :compute_pools
 
       request_path 'fog/ecloud/requests/compute'
       request :add_internet_service
@@ -891,6 +893,8 @@ module Fog
       request :power_on
       request :power_reset
       request :power_shutdown
+      request :get_compute_pool
+      request :get_compute_pools
 
       module Shared
 
@@ -1177,7 +1181,7 @@ module Fog
           end
           begin
             do_request(params)
-          rescue Excon::Errors::Unauthorized => e
+          rescue Excon::Errors::Unauthorized
             do_login
             do_request(params)
           end

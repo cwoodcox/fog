@@ -1,4 +1,4 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'aws'))
+require 'fog/aws'
 
 module Fog
   module AWS
@@ -32,6 +32,7 @@ module Fog
       request :execute_policy
       request :put_scaling_policy
       request :put_scheduled_update_group_action
+      request :put_notification_configuration
       request :resume_processes
       request :set_desired_capacity
       request :set_instance_health
@@ -103,7 +104,7 @@ module Fog
               :host               => @host,
               :path               => @path,
               :port               => @port,
-              :version            => '2010-08-01'
+              :version            => '2011-01-01'
             }
           )
 
@@ -144,7 +145,6 @@ module Fog
 
         def self.data
           @data ||= Hash.new do |hash, region|
-            owner_id = Fog::AWS::Mock.owner_id
             hash[region] = Hash.new do |region_hash, key|
               region_hash[key] = {
                 :adjustment_types => [
