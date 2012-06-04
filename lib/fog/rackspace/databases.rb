@@ -26,6 +26,7 @@ module Fog
       request :get_flavor
       request :list_instances_details
       request :get_instance
+      request :create_instance
       request :check_root_user
       request :list_databases
       request :list_users
@@ -71,7 +72,7 @@ module Fog
           rescue Excon::Errors::NotFound => error
             raise NotFound.slurp error
           rescue Excon::Errors::BadRequest => error
-            raise BadRequest.slurp error
+            raise Fog::Rackspace::Errors::BadRequest.slurp error
           rescue Excon::Errors::InternalServerError => error
             raise InternalServerError.slurp error
           rescue Excon::Errors::HTTPStatusError => error
