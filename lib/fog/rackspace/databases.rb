@@ -22,15 +22,15 @@ module Fog
       collection :users
 
       request_path 'fog/rackspace/requests/databases'
-      request :list_flavors_details
-      request :get_flavor
-      request :list_instances_details
-      request :get_instance
-      request :create_instance
-      request :create_database
-      request :create_user
       request :check_root_user
+      request :create_database
+      request :create_instance
+      request :create_user
+      request :get_flavor
+      request :get_instance
       request :list_databases
+      request :list_flavors_details
+      request :list_instances_details
       request :list_users
 
       class Mock
