@@ -26,6 +26,7 @@ module Fog
       request :create_database
       request :create_instance
       request :create_user
+      request :delete_database
       request :get_flavor
       request :get_instance
       request :list_databases
